@@ -13,6 +13,7 @@ import java.util.Random;
 public class Utils {
 	public static Statement statement;
 	public static PreparedStatement prepareStatement;
+	public static Connection connection;
 	private static HashSet<String> HashsetOfTableName = new HashSet<String>();
 
 	public enum Status {
@@ -22,7 +23,7 @@ public class Utils {
 	public static Status JudgeTableExsitsOrNot(String tablename) {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
-			Connection connection = DriverManager
+			connection = DriverManager
 					.getConnection("jdbc:mysql://localhost/test");
 			DatabaseMetaData dbMetaData = connection.getMetaData();
 			ResultSet rs = dbMetaData.getTables(null, null, null,

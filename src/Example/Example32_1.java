@@ -1,23 +1,18 @@
 package Example;
 
 import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
-
 import javax.swing.JApplet;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.event.AncestorEvent;
-import javax.swing.event.AncestorListener;
 
 import Utils.Utils;
 import Utils.sqlTools;
@@ -79,11 +74,8 @@ public class Example32_1 extends JApplet {
 
 			@Override
 			public void itemStateChanged(ItemEvent itemtext) {
-				// TODO Auto-generated method stub
 				int ID = Integer.parseInt((String) (itemtext.getItem()));
-				System.out.println(ID);
-
-				sqlTools.queryById(ID, "select * from staff where id = " + ID);
+				sqlTools.queryById(ID, "select * from staff where id = ?");
 
 			}
 		});
@@ -105,7 +97,6 @@ public class Example32_1 extends JApplet {
 				StringArrayInJComboBox[i++] = str;
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
