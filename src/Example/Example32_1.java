@@ -46,11 +46,11 @@ public class Example32_1 extends JApplet {
 		jpanelButton.add(btnUpdate);
 		jpanelButton.add(btnClear);
 
-		JTextField jtfLastName = new JTextField(5);
-		JTextField jtfAddress = new JTextField(5);
-		JTextField jtfCity = new JTextField(5);
-		JTextField jtfState = new JTextField(5);
-		JTextField jtfTelephone = new JTextField(10);
+		final JTextField jtfLastName = new JTextField(5);
+		final JTextField jtfAddress = new JTextField(5);
+		final JTextField jtfCity = new JTextField(5);
+		final JTextField jtfState = new JTextField(5);
+		final JTextField jtfTelephone = new JTextField(10);
 
 		JPanel jpanel1 = new JPanel();
 
@@ -75,7 +75,24 @@ public class Example32_1 extends JApplet {
 			@Override
 			public void itemStateChanged(ItemEvent itemtext) {
 				int ID = Integer.parseInt((String) (itemtext.getItem()));
-				sqlTools.queryById(ID, "select * from staff where id = ?");
+
+				String s[] = Utils.ConvertArrayListToStringList(sqlTools
+						.queryById(ID, "select * from staff where id = ?"));
+				for (int i = 0; i < s.length; i++)
+					System.out.println("String[]===>" + s[i]);
+				String id = s[0];
+				String lastname = s[1];
+				String firstname = s[2];
+				String mi = s[3];
+				String address = s[4];
+				String state = s[5];
+				String telephone = s[6];
+
+				jtfLastName.setText(lastname);
+				jtfAddress.setText(address);
+				jtfState.setText(state);
+				jtfCity.setText(state);
+				jtfTelephone.setText(telephone);
 
 			}
 		});

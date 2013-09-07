@@ -7,6 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Random;
 
@@ -23,8 +24,10 @@ public class Utils {
 	public static Status JudgeTableExsitsOrNot(String tablename) {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
+			System.out.println("Class.forName finished!");
 			connection = DriverManager
 					.getConnection("jdbc:mysql://localhost/test");
+			System.out.println("Connection finished!");
 			DatabaseMetaData dbMetaData = connection.getMetaData();
 			ResultSet rs = dbMetaData.getTables(null, null, null,
 					new String[] { "TABLE" });
@@ -139,6 +142,17 @@ public class Utils {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	public static String[] ConvertArrayListToStringList(
+			ArrayList<String> arraylist) {
+		String[] stringList = new String[arraylist.size()];
+		int i = 0;
+		for (String arr : arraylist) {
+			stringList[i++] = arr;
+		}
+		return stringList;
+
 	}
 
 }
