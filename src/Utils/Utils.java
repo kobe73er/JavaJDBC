@@ -24,10 +24,8 @@ public class Utils {
 	public static Status JudgeTableExsitsOrNot(String tablename) {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
-			System.out.println("Class.forName finished!");
 			connection = DriverManager
 					.getConnection("jdbc:mysql://localhost/test");
-			System.out.println("Connection finished!");
 			DatabaseMetaData dbMetaData = connection.getMetaData();
 			ResultSet rs = dbMetaData.getTables(null, null, null,
 					new String[] { "TABLE" });
@@ -37,10 +35,15 @@ public class Utils {
 			for (String iterator : HashsetOfTableName) {
 				if (iterator.equals(tablename)) {
 					System.out.println("table exsits");
-					Utils.initDBWithStatement();
-					System.out.println("Execute delete from " + tablename);
-					Utils.statement.executeUpdate("delete from " + tablename);
+					// Utils.initDBWithStatement();
+					// System.out.println("Execute delete from " + tablename);
+					// Utils.statement.executeUpdate("delete from " +
+					// tablename);
 					return Status.EXSITS;
+				} else {
+					Utils.initDBWithStatement();
+					Utils.statement.executeUpdate("delete from " + tablename);
+					return Status.NOTEXSITS;
 				}
 			}
 		} catch (ClassNotFoundException e) {
@@ -60,7 +63,9 @@ public class Utils {
 			Class.forName("com.mysql.jdbc.Driver");
 			Connection connection = DriverManager
 					.getConnection("jdbc:mysql://localhost/test");
-
+			if (null != prepareStatement) {
+				return;
+			}
 			prepareStatement = connection.prepareStatement(sqlString);
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -77,6 +82,9 @@ public class Utils {
 			Class.forName("com.mysql.jdbc.Driver");
 			Connection connection = DriverManager
 					.getConnection("jdbc:mysql://localhost/test");
+			if (null != statement) {
+				return;
+			}
 			statement = connection.createStatement();
 
 		} catch (ClassNotFoundException e) {
@@ -114,7 +122,9 @@ public class Utils {
 	public static void InsertSomeDataIntoTable(String tablename, int rownum,
 			String sqlString) {
 
-		JudgeTableExsitsOrNot(tablename);
+		if (JudgeTableExsitsOrNot(tablename) == Status.EXSITS) {
+			return;
+		}
 
 		initDBWithPreparedStatement(sqlString);
 

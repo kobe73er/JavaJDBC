@@ -7,6 +7,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 import javax.swing.JApplet;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -23,16 +26,16 @@ public class Example32_1 extends JApplet {
 	 */
 	private static final long serialVersionUID = 1L;
 	private static ArrayList<String> IdArrayList = new ArrayList<String>();
-	String[] StringArrayInJComboBox;
+	static String[] StringArrayInJComboBox;
+	static JComboBox<String> JComboBoxOfId = new JComboBox<String>();
 
 	public void init() {
 		String insertString = "insert into staff values(?,?,?,?,?,?,?)";
 		Utils.InsertSomeDataIntoTable("staff", 100, insertString);
 
-		initJCombox();
-
-		JComboBox<String> JComboBoxOfId = new JComboBox<String>(
-				StringArrayInJComboBox);
+		ExecutorService executor = Executors.newCachedThreadPool();
+		executor.execute(new initJCombox());
+		executor.shutdown();
 
 		JButton btnSearch = new JButton("search");
 		JButton btnInsert = new JButton("insert");
@@ -75,11 +78,8 @@ public class Example32_1 extends JApplet {
 			@Override
 			public void itemStateChanged(ItemEvent itemtext) {
 				int ID = Integer.parseInt((String) (itemtext.getItem()));
-
 				String s[] = Utils.ConvertArrayListToStringList(sqlTools
 						.queryById(ID, "select * from staff where id = ?"));
-				for (int i = 0; i < s.length; i++)
-					System.out.println("String[]===>" + s[i]);
 				String id = s[0];
 				String lastname = s[1];
 				String firstname = s[2];
@@ -99,24 +99,30 @@ public class Example32_1 extends JApplet {
 
 	}
 
-	public void initJCombox() {
-		try {
-			Utils.initDBWithStatement();
-			ResultSet rsID = Utils.statement
-					.executeQuery("select id from staff");
-			while (rsID.next()) {
-				IdArrayList.add(rsID.getString(1));
+	public static class initJCombox implements Runnable {
+		@Override
+		public void run() {
+			// TODO Auto-generated method stub
+			try {
+				Utils.initDBWithStatement();
+				ResultSet rsID = Utils.statement
+						.executeQuery("select id from staff");
+				while (rsID.next()) {
+					IdArrayList.add(rsID.getString(1));
+				}
+				Collections.sort(IdArrayList);
+				StringArrayInJComboBox = new String[IdArrayList.size()];
+				int i = 0;
+				for (String str : IdArrayList) {
+					StringArrayInJComboBox[i++] = str;
+				}
+				for (String s : StringArrayInJComboBox)
+					JComboBoxOfId.addItem(s);
+			} catch (SQLException e) {
+				e.printStackTrace();
 			}
-			Collections.sort(IdArrayList);
-			StringArrayInJComboBox = new String[IdArrayList.size()];
-			int i = 0;
-			for (String str : IdArrayList) {
-				StringArrayInJComboBox[i++] = str;
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
+
 		}
 
 	}
-
 }
