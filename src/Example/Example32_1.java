@@ -1,6 +1,8 @@
 package Example;
 
 import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.sql.ResultSet;
@@ -55,6 +57,9 @@ public class Example32_1 extends JApplet {
 		final JTextField jtfState = new JTextField(5);
 		final JTextField jtfTelephone = new JTextField(10);
 
+		final JTextField[] jtfArray = { jtfLastName, jtfAddress, jtfCity, jtfState,
+				jtfTelephone };
+
 		JPanel jpanel1 = new JPanel();
 
 		jpanel1.add(new JLabel("ID"));
@@ -73,11 +78,14 @@ public class Example32_1 extends JApplet {
 		add(jpanel1);
 		add(jpanelButton, BorderLayout.SOUTH);
 
-		JComboBoxOfId.addItemListener(new ItemListener() {
+		btnSearch.addActionListener(new ActionListener() {
 
 			@Override
-			public void itemStateChanged(ItemEvent itemtext) {
-				int ID = Integer.parseInt((String) (itemtext.getItem()));
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+
+				int ID = Integer.parseInt((String) JComboBoxOfId
+						.getSelectedItem());
 				String s[] = Utils.ConvertArrayListToStringList(sqlTools
 						.queryById(ID, "select * from staff where id = ?"));
 				String id = s[0];
@@ -93,6 +101,23 @@ public class Example32_1 extends JApplet {
 				jtfState.setText(state);
 				jtfCity.setText(state);
 				jtfTelephone.setText(telephone);
+			}
+		});
+
+		btnClear.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				for(int i=0;i<jtfArray.length;i++){
+					jtfArray[i].setText("");
+				}
+			}
+		});
+		JComboBoxOfId.addItemListener(new ItemListener() {
+
+			@Override
+			public void itemStateChanged(ItemEvent itemtext) {
 
 			}
 		});
